@@ -13,42 +13,63 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.spring.spring_rest_security.service.CustomUserDetailsService;
 
+/**
+ * Configures Spring Security rules, password hashing, 
+ * and authentication settings.
+ */
 @EnableWebSecurity 
 @Configuration 
 public class SecurityConfig {
 
+    //initialization
     private CustomUserDetailsService userDetailsService;
 
+    //constructor
     public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.setUserDetailsService(userDetailsService);
     }
 
+    //getter
     public CustomUserDetailsService getUserDetailsService() {
         return userDetailsService;
     }
 
-    public void setUserDetailsService(CustomUserDetailsService userDetailsService) {
+    //setter
+    public void setUserDetailsService
+    (CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Provides a BCrypt encoder for securely hashing and verifying passwords.
+     */
     @Bean 
     BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Exposes the authentication manager used to process login requests.
+     */
     @Bean 
     AuthenticationManager authenticationManager
     (AuthenticationConfiguration authentication) throws Exception {
         return authentication.getAuthenticationManager();
     }
 
+    /**
+     * Defines the security filter chain: disables CSRF, 
+     * allows public access to auth endpoints, secures all other routes, 
+     * and enables HTTP Basic authentication.
+     */
     @Bean 
     SecurityFilterChain filterChain(HttpSecurity security)
     throws Exception {
         return security
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                                    .requestMatchers("/api/auth/**").permitAll()
+                                    .requestMatchers("/api/auth/**")
+                                    .permitAll()
                                     .anyRequest().authenticated()
                                     )
             .httpBasic(Customizer.withDefaults())

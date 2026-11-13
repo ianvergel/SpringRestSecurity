@@ -13,6 +13,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.CascadeType;
 
+/**
+ * Intializes an entity including the DDL of the Auth User Table.
+ */
 @Entity 
 @Table(name="auth_user")
 public class Auth_User {
@@ -27,7 +30,8 @@ public class Auth_User {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="authusers_authroles",
     joinColumns=@JoinColumn(name="authuser_id", referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name="authrole_id", referencedColumnName = "id"))
+    inverseJoinColumns = @JoinColumn
+    (name="authrole_id", referencedColumnName = "id"))
     private List<Auth_Role> roles = new ArrayList<>();
 
     public Long getId() {

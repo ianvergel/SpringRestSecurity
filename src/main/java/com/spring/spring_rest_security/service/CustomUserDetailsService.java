@@ -16,6 +16,9 @@ import com.spring.spring_rest_security.entity.Auth_Role;
 import com.spring.spring_rest_security.entity.Auth_User;
 import com.spring.spring_rest_security.repository.AuthUserRepository;
 
+/**
+ * Service implementation for managing Authentication Implementations.
+ */
 @Service 
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -25,16 +28,28 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.authUserRepo = authUserRepo;
     }
 
+    /**
+     * Finds a user by username and returns their credentials
+     * and roles for login validation.
+     */
     public UserDetails loadUserByUsername(String theUsername) {
         Auth_User user = authUserRepo.findByUsername(theUsername)
         .orElseThrow(
-            () -> new UsernameNotFoundException("Username " + theUsername + " does not exist")
+            () -> new UsernameNotFoundException
+            ("Username " + theUsername + " does not exist")
         );
-        return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+        return new User(user.getUsername(), 
+                        user.getPassword(), 
+                        mapRolesToAuthorities(user.getRoles()));
     }
 
-    private Collection<GrantedAuthority> mapRolesToAuthorities(List<Auth_Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+    /**
+     * Converts a user's database roles into Spring Security authorities.
+     */
+    private Collection<GrantedAuthority> mapRolesToAuthorities
+    (List<Auth_Role> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority
+            (role.getName()))
             .collect(Collectors.toList());
     }
 

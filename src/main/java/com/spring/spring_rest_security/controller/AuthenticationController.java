@@ -21,6 +21,10 @@ import com.spring.spring_rest_security.entity.Auth_User;
 import com.spring.spring_rest_security.repository.AuthRoleRepository;
 import com.spring.spring_rest_security.repository.AuthUserRepository;
 
+/**
+ * REST controller handling role creation, user registration, 
+ * and login authentication.
+ */
 @RestController 
 @RequestMapping("/api/auth")
 public class AuthenticationController {
@@ -30,19 +34,26 @@ public class AuthenticationController {
     private AuthRoleRepository authRoleRepo;
     private BCryptPasswordEncoder passwordEncoder;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, AuthUserRepository authUserRepo,
-            AuthRoleRepository authRoleRepo, BCryptPasswordEncoder passwordEncoder) {
+    public AuthenticationController
+    (AuthenticationManager authenticationManager, 
+        AuthUserRepository authUserRepo,
+        AuthRoleRepository authRoleRepo, 
+        BCryptPasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.authUserRepo = authUserRepo;
         this.authRoleRepo = authRoleRepo;
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Creates a new role if it does not already exist.
+     */
     @PostMapping("/register_authorized_role")
     public ResponseEntity<String> register_authRole(
         @RequestBody AuthRoleRegisterDto authRoleRegisterDto) {
             if(authRoleRepo.existsByName(authRoleRegisterDto.getName())) {
-                return new ResponseEntity<>(authRoleRegisterDto.getName() + " already created.",
+                return new ResponseEntity<>
+                (authRoleRegisterDto.getName() + " already created.",
                 HttpStatus.BAD_REQUEST);
             }
 
@@ -51,19 +62,27 @@ public class AuthenticationController {
 
             authRoleRepo.save(auth_role);
 
-            return new ResponseEntity<>(auth_role.getName() + " is successfully created", HttpStatus.OK);
+            return new ResponseEntity<>
+            (auth_role.getName() + " is successfully created", HttpStatus.OK);
     }
 
+    /**
+     * Registers a new user with an encoded password and assigns them the default USER role.
+     */
     @PostMapping("/register_authorized_user")
     public ResponseEntity<String> register_authUser(
         @RequestBody AuthUserRegisterDto authUserRegisterDto) {
-            if(authUserRepo.existsByUsername(authUserRegisterDto.getUsername())) {
-                return new ResponseEntity<>(authUserRegisterDto.getUsername() + " is already created.", HttpStatus.BAD_REQUEST);
+            if(authUserRepo.existsByUsername
+                (authUserRegisterDto.getUsername())) {
+                return new ResponseEntity<>
+                (authUserRegisterDto.getUsername() + 
+                " is already created.", HttpStatus.BAD_REQUEST);
             }
 
             Auth_User auth_user = new Auth_User();
             auth_user.setUsername(authUserRegisterDto.getUsername());
-            auth_user.setPassword(passwordEncoder.encode(authUserRegisterDto.getPassword()));
+            auth_user.setPassword(passwordEncoder.encode
+                (authUserRegisterDto.getPassword()));
 
             Auth_Role auth_role = authRoleRepo.findByName("USER")
             .orElseThrow(() -> new RuntimeException("Roles USER not found"));
@@ -71,16 +90,24 @@ public class AuthenticationController {
 
             authUserRepo.save(auth_user);
 
-            return new ResponseEntity<>(auth_user.getUsername() + " is successfully registered", HttpStatus.OK);
+            return new ResponseEntity<>(auth_user.getUsername() + 
+            " is successfully registered", HttpStatus.OK);
     }
 
+    /**
+     * Authenticates a user's credentials and stores 
+     * their session in the security context.
+     */
     @PostMapping("/auth_login")
     public ResponseEntity<String> login(
         @RequestBody AuthLoginDto authLoginDto) {
             Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authLoginDto.getUsername(), authLoginDto.getPassword()));
-                SecurityContextHolder.getContext().setAuthentication(authenticate);
+                new UsernamePasswordAuthenticationToken
+                (authLoginDto.getUsername(), authLoginDto.getPassword()));
+                SecurityContextHolder.getContext()
+                .setAuthentication(authenticate);
 
-                return new ResponseEntity<>("Sign in successfully!", HttpStatus.OK);
+                return new ResponseEntity<>
+                ("Sign in successfully!", HttpStatus.OK);
         }
 }

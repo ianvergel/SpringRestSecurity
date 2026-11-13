@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.spring.spring_rest_security.entity.Auth_User;
 
+/**
+ * Initializes database operations
+ */
 public interface AuthUserRepository extends JpaRepository<Auth_User, Long> {
     Optional<Auth_User> findByUsername(String theUsername);
     Boolean existsByUsername(String theUsername);

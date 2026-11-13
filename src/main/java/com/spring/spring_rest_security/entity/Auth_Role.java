@@ -6,6 +6,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 
+/**
+ * Intializes an entity including the DDL of the Auth Role Table.
+ */
 @Entity 
 @Table (name = "auth_role")
 public class Auth_Role {
