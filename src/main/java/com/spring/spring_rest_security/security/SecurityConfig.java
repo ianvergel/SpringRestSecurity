@@ -21,20 +21,28 @@ import com.spring.spring_rest_security.service.CustomUserDetailsService;
 @Configuration 
 public class SecurityConfig {
 
-    //initialization
+    /**
+     * Initialization
+     */
     private CustomUserDetailsService userDetailsService;
 
-    //constructor
+    /**
+     * Constructor
+     */
     public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.setUserDetailsService(userDetailsService);
     }
 
-    //getter
+    /**
+     * Getter
+     */
     public CustomUserDetailsService getUserDetailsService() {
         return userDetailsService;
     }
 
-    //setter
+    /**
+     * Setter
+     */
     public void setUserDetailsService
     (CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;

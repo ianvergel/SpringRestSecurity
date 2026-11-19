@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/students")
 public class StudentRestController {
     private StudentService studentService;
-    
-    //Constructor for studentService
+
+    /**
+     * Constructor for studentService
+     */
     public StudentRestController(StudentService studentService) {
         this.studentService = studentService;
     }

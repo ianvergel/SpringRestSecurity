@@ -67,7 +67,8 @@ public class AuthenticationController {
     }
 
     /**
-     * Registers a new user with an encoded password and assigns them the default USER role.
+     * Registers a new user with an encoded password 
+     * and assigns them the default USER role.
      */
     @PostMapping("/register_authorized_user")
     public ResponseEntity<String> register_authUser(
